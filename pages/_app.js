@@ -1,5 +1,7 @@
+import { AppProps } from "next/app";
 import GlobalStyle from "../styles/GlobalStyle";
 import Footer from "../components/Footer";
+import { wrapper } from "../store";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -11,4 +13,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);
