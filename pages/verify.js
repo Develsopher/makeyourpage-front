@@ -4,7 +4,8 @@ import VerifyIcon from "../public/statics/svg/verify_mark.svg";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 import Logo from "../components/common/Logo";
-import { signupAPI } from "../lib/api/auth";
+import { useSelector } from "react-redux";
+import { verifyAPI } from "../lib/api/verify";
 
 const Container = styled.form`
   display: flex;
@@ -43,6 +44,7 @@ const Container = styled.form`
 const Verify = () => {
   const [code, setCode] = useState("");
   const [validateMode, setValidateMode] = useState(false);
+  const email = useSelector(({ user }) => user.email);
 
   const onChangeCode = (e) => {
     setCode(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"));
@@ -56,8 +58,17 @@ const Verify = () => {
     if (!code) {
       return undefined;
     }
+    try {
+      const verifyBody = {
+        usermail: email,
+        code: code,
+      };
+      await verifyAPI(verifyBody);
+    } catch (e) {
+      console.log(e);
+    }
   };
-
+  console.log("email", email);
   return (
     <Container onSubmit={onSubmitVerify}>
       <div className="signup-wrap">
@@ -71,7 +82,7 @@ const Verify = () => {
             name="code"
             value={code}
             onChange={onChangeCode}
-            maxlength="6"
+            maxLength="6"
             validateMode={validateMode}
             useValidation
             isValid={!!code}

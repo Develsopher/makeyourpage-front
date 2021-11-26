@@ -1,4 +1,3 @@
-import { AppProps } from "next/app";
 import GlobalStyle from "../styles/GlobalStyle";
 import Footer from "../components/Footer";
 import { wrapper } from "../store";

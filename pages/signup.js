@@ -7,6 +7,8 @@ import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 import Logo from "../components/common/Logo";
 import { signupAPI } from "../lib/api/auth";
+import { useSelector, useDispatch } from "react-redux";
+import * as userActions from "../store/modules/user";
 import PasswordWarning from "../components/auths/PasswordWarning";
 import EmailWarning from "../components/auths/EmailWarning";
 const PASSWORD_MIN_LENGTH = 8;
@@ -66,12 +68,15 @@ const Container = styled.form`
 `;
 
 const SignUpModal = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [validationEmail, setValidationEmail] = useState(true);
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
   const [validateMode, setValidateMode] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+
+  const emailRedux = useSelector(({ user }) => user.email);
 
   const isPasswordOverMinLength = useMemo(
     () => !!password && password.length >= PASSWORD_MIN_LENGTH,
@@ -96,6 +101,7 @@ const SignUpModal = () => {
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
+    dispatch(userActions.setEmail(e.target.value));
   };
   const onChangePassword = (e) => {
     setPassword(e.target.value);
@@ -124,12 +130,13 @@ const SignUpModal = () => {
         username: email,
         password: password,
       };
+
       await signupAPI(signUpBody);
     } catch (e) {
       console.log(e);
     }
   };
-
+  console.log("emailRedux", emailRedux);
   return (
     <Container onSubmit={onSubmitSignUp}>
       <div className="signup-wrap">

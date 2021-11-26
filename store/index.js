@@ -1,32 +1,16 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import { HYDRATE, createWrapper } from "next-redux-wrapper";
-import auth from "./auth";
+import { configureStore } from "@reduxjs/toolkit";
+import { createWrapper } from "next-redux-wrapper";
+import logger from "redux-logger";
 
-const rootReducer = combineReducers({
-  auth,
+import reducer from "./modules";
+
+const makeStore = (context) =>
+  configureStore({
+    reducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+    devTools: process.env.NODE_ENV !== "production",
+  });
+
+export const wrapper = createWrapper(makeStore, {
+  debug: process.env.NODE_ENV !== "production",
 });
-
-const reducer = (state, action) => {
-  if (action.type === HYDRATE) {
-    const nextState = {
-      ...state,
-      ...action.payload,
-    };
-    return nextState;
-  }
-  return rootReducer(state, action);
-};
-
-const bindMiddleware = (middleware) => {
-  if (process.env.NODE_ENV !== "production") {
-    const { composeWithDevTools } = require("redux-devtools-extension");
-    return composeWithDevTools(applyMiddleware(...middleware));
-  }
-  return applyMiddleware(...middleware);
-};
-
-const initStore = () => {
-  return createStore(reducer, bindMiddleware([]));
-};
-
-export const wrapper = createWrapper(initStore);
