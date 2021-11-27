@@ -6,9 +6,9 @@ import * as userActions from "../store/modules/user";
 export default function Test() {
   const dispatch = useDispatch();
   const value = useSelector(({ counter }) => counter.value);
-  console.log("value", value);
+
   const email = useSelector(({ user }) => user.email);
-  console.log("email", email);
+
   // const email = useSelector(({ users }) => users.email);
   const plus = useCallback(
     ({ value }) => {

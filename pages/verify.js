@@ -68,7 +68,7 @@ const Verify = () => {
       console.log(e);
     }
   };
-  console.log("email", email);
+
   return (
     <Container onSubmit={onSubmitVerify}>
       <div className="verify-wrap">
