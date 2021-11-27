@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import IndexHeader from "../components/index/IndexHeader";
 import SectionTop from "../components/index/SectionTop";

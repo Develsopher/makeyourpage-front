@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { Box, TextField, TextareaAutosize, MenuItem } from "@material-ui/core";
-import axios from "axios";
+import { contactAPI } from "../../lib/api/contact";
 const Section = styled.section`
   & .bottom_wrap {
     width: 100%;
@@ -93,11 +93,10 @@ const purposeList = [
   },
 ];
 export default function SectionBottom() {
-  const url =
-    "https://z1tf4id0a9.execute-api.ap-northeast-2.amazonaws.com/api/contactmail";
   const [purpose, setPurpose] = useState("Portfolio");
   const [email, setEmail] = useState("");
   const [desc, setDesc] = useState("");
+  const [errorEmail, setErrorEmail] = useState(false);
 
   useEffect(() => {}, [purpose, email, desc]);
   const handleChnagePurpose = (e) => {
@@ -105,25 +104,40 @@ export default function SectionBottom() {
   };
   const handleChnageEmail = (e) => {
     setEmail(e.target.value);
+    if (isEmail) {
+      setErrorEmail(false);
+    }
   };
   const handleChangeDesc = (e) => {
     setDesc(e.target.value);
   };
-  const handleSubmit = (e) => {
+  const isEmail = useMemo(
+    () =>
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/g.test(
+        email
+      ),
+    [email]
+  );
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    axios
-      .post(url, {
+
+    if (!email || !isEmail) {
+      setErrorEmail(true);
+      return undefined;
+    }
+
+    try {
+      const contactBody = {
         subject: purpose,
         address: "lebind12@naver.com",
         content: email + desc,
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          alert("성공입니다~");
-        }
-      })
-      .catch(console.log);
+      };
+      await contactAPI(contactBody);
+    } catch (e) {
+      console.log(e);
+    }
   };
+
   return (
     <Section className="bottom">
       <div className="bottom_wrap">
@@ -143,7 +157,11 @@ export default function SectionBottom() {
                 </p>
               </div>
             </div>
-            <Box component="form" className="input_box">
+            <Box
+              component="form"
+              className="input_box"
+              onSubmit={handleContactSubmit}
+            >
               <TextField
                 id="outlined-select-purpose"
                 select
@@ -166,6 +184,8 @@ export default function SectionBottom() {
                 className="inp"
                 variant="outlined"
                 onChange={handleChnageEmail}
+                error={errorEmail ? true : false}
+                helperText={errorEmail ? "Incorrect Email Address" : ""}
               />
               <TextareaAutosize
                 aria-label="minimum height"
@@ -180,7 +200,6 @@ export default function SectionBottom() {
                 value="SUBMIT"
                 name="submit"
                 className="submit_btn inp"
-                onClick={handleSubmit}
               />
             </Box>
           </div>

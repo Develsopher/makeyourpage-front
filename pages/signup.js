@@ -6,7 +6,7 @@ import ClosedIcon from "../public/statics/svg/closed_eye.svg";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 import Logo from "../components/common/Logo";
-import { signupAPI } from "../lib/api/auth";
+import { signupAPI } from "../lib/api/auth/signup";
 import { useSelector, useDispatch } from "react-redux";
 import * as userActions from "../store/modules/user";
 import PasswordWarning from "../components/auths/PasswordWarning";
@@ -136,7 +136,7 @@ const SignUpModal = () => {
       console.log(e);
     }
   };
-  console.log("emailRedux", emailRedux);
+
   return (
     <Container onSubmit={onSubmitSignUp}>
       <div className="signup-wrap">

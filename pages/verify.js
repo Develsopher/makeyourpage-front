@@ -5,7 +5,7 @@ import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 import Logo from "../components/common/Logo";
 import { useSelector } from "react-redux";
-import { verifyAPI } from "../lib/api/verify";
+import { verifyAPI } from "../lib/api/auth/verify";
 
 const Container = styled.form`
   display: flex;
@@ -15,7 +15,7 @@ const Container = styled.form`
   min-height: 100vh;
   font-family: "Raleway", sans-serif;
 
-  .signup-wrap {
+  .verify-wrap {
     position: relative;
     width: 50%;
     min-width: 400px;
@@ -71,7 +71,7 @@ const Verify = () => {
   console.log("email", email);
   return (
     <Container onSubmit={onSubmitVerify}>
-      <div className="signup-wrap">
+      <div className="verify-wrap">
         <Logo className="logo" />
         <h1 className="join-us">Verify</h1>
         <div className="input-wrapper">
